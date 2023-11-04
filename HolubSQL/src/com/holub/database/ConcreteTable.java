@@ -29,6 +29,7 @@ package com.holub.database;
 import java.io.*;
 import java.util.*;
 import com.holub.tools.ArrayIterator;
+import java.util.stream.Collectors;
 
 /**
  * A concrete implementation of the {@link Table} interface that implements an
@@ -77,7 +78,10 @@ import com.holub.tools.ArrayIterator;
 		this.tableName = tableName;
 		this.columnNames = (String[]) columnNames.clone();
 	}
-
+	
+	public String[] getColumnNames() {
+		return columnNames;
+	}
 	/**********************************************************************
 	 * Return the index of the named column. Throw an IndexOutOfBoundsException if
 	 * the column doesn't exist.
@@ -457,6 +461,14 @@ import com.holub.tools.ArrayIterator;
 		allTables[0] = this;
 		System.arraycopy(otherTables, 0, allTables, 1, otherTables.length);
 
+		if (requestedColumns == null) {
+			HashSet<String> allTablesColumns = new HashSet<>();
+			for (Table table : allTables) {
+				allTablesColumns.addAll(Arrays.stream(((ConcreteTable) table).getColumnNames()).collect(Collectors.toSet()));
+			}
+			requestedColumns = allTablesColumns.toArray(new String[allTablesColumns.size()]);
+		}
+		
 		// Create places to hold the result of the join and to hold
 		// iterators for each table involved in the join.
 

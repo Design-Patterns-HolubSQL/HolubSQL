@@ -246,6 +246,7 @@ public class Console
 
 		try
 		{	
+			//맥의 경우 file:로 수정하고 절대경로 사용
 			connection = DriverManager.getConnection("file:/"+databaseName, "harpo", "swordfish");
 			statement = connection.createStatement();
 		}
