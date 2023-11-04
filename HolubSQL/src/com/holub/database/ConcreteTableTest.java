@@ -10,13 +10,9 @@ import com.holub.text.ParseFailure;
 import java.io.*;
 
 class ConcreteTableTest {
-	Table name;
-	Table address;
 	Database database;
 
 	public void setUp() throws IOException {
-		name = TableFactory.create("name", new String[] { "first", "last", "addrId" });
-	    address = TableFactory.create("address", new String[] { "addrId", "street", "city", "state", "zip" });
 		database = new Database(new File("Dbase"));
 	}
 	
