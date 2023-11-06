@@ -79,8 +79,14 @@ import java.util.stream.Collectors;
 		this.columnNames = (String[]) columnNames.clone();
 	}
 	
+	public String getTableName() {
+		return tableName;
+	}
 	public String[] getColumnNames() {
 		return columnNames;
+	}
+	public LinkedList getRowSet(){
+		return rowSet;
 	}
 	/**********************************************************************
 	 * Return the index of the named column. Throw an IndexOutOfBoundsException if

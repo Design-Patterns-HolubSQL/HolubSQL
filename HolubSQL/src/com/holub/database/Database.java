@@ -402,6 +402,7 @@ public final class Database
 		USE			= tokens.create( "'USE"		),
 		VALUES 		= tokens.create( "'VALUES"	),
 		WHERE		= tokens.create( "'WHERE"	),
+		DISTINCT 	= tokens.create( "'DISTINCT"),
 
 		WORK		= tokens.create( "WORK|TRAN(SACTION)?"		),
 		ADDITIVE	= tokens.create( "\\+|-" 					),
@@ -717,7 +718,7 @@ public final class Database
 	private Table statement() throws ParseFailure, IOException
 	{
 		affectedRows = 0;	// is modified by UPDATE, INSERT, DELETE
-
+		QueryBuilder queryBuilder;
 		// These productions map to public method calls:
 
 		if( in.matchAdvance(CREATE) != null )
@@ -796,7 +797,10 @@ public final class Database
 			affectedRows = doDelete( tableName, expr() );
 		}
 		else if( in.matchAdvance(SELECT) != null )
-		{	List columns = idList();
+		{	
+			String distinct = in.matchAdvance(DISTINCT);
+			boolean isDistinct = (distinct != null);
+			List columns = idList();
 
 			String into = null;
 			if( in.matchAdvance(INTO) != null )
@@ -809,6 +813,9 @@ public final class Database
 								? null : expr();
 			Table result = doSelect(columns, into,
 								requestedTableNames, where );
+
+		    queryBuilder = new DistinctBuilder(result, isDistinct);
+		    queryBuilder.build();		
 			return result;
 		}
 		else
