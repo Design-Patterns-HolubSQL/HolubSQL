@@ -813,9 +813,12 @@ public final class Database
 								? null : expr();
 			Table result = doSelect(columns, into,
 								requestedTableNames, where );
-
+			
+			QueryBuilderDirector queryBuilderDirector = new QueryBuilderDirector();
 		    queryBuilder = new DistinctBuilder(result, isDistinct);
-		    queryBuilder.build();		
+		    
+		    queryBuilderDirector.setQueryBuilder(queryBuilder);
+		    queryBuilderDirector.customizedTable();		
 			return result;
 		}
 		else
